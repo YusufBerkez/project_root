@@ -1,0 +1,29 @@
+Raspberry Pi HQ Kamera Flask Sunucu Kurulum ve Kullanım Talimatları
+
+1. Raspberry Pi’yi güncelleyin:
+sudo apt update
+sudo apt upgrade -y
+
+2. Gerekli Python paketlerini kurun:
+sudo apt install python3-pip python3-opencv -y
+pip3 install flask
+
+3. Kamera modülünü aktifleştirin:
+sudo raspi-config
+Interface Options -> Camera -> Enable
+sudo reboot
+
+4. Proje dosyalarını Raspberry Pi’ye kopyalayın:
+- app.py
+- videos/ ve photos/ klasörleri (varsa)
+
+5. Flask sunucusunu çalıştırın:
+python3 app.py
+
+6. Canlı yayın: http://<raspberry_pi_ip>:5000/stream
+7. Fotoğraf çek: http://<raspberry_pi_ip>:5000/capture_photo
+8. Video kaydı başlat: http://<raspberry_pi_ip>:5000/start_video
+9. Video kaydı durdur: http://<raspberry_pi_ip>:5000/stop_video
+10. Kaydedilen videoları listele: http://<raspberry_pi_ip>:5000/get_videos
+
+Opsiyonel: Otomatik başlatma için systemd servisi ekleyin.
