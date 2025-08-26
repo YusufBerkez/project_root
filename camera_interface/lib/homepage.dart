@@ -9,16 +9,19 @@ class CameraHome extends StatefulWidget {
 }
 
 class _CameraHomeState extends State<CameraHome> {
-  String backendIP = "192.168.1.38:5000"; // Python backend IP
-  String ipCameraURL = "http://192.168.1.35:8080/video"; // Telefon IP kamera URL
+  // Raspberry Pi'nin IP adresini hostname -I çıktısından alıp buraya yaz
+  String backendIP = "192.168.43.37:5000"; // Örnek, seninkini yaz
   bool recording = false;
   List<String> videos = [];
+  List<String> photos = [];
 
+  // --- Fotoğraf Çekme ---
   Future<void> capturePhoto() async {
     final res = await http.get(Uri.parse("http://$backendIP/capture_photo"));
     print(res.body);
   }
 
+  // --- Video Başlatma ---
   Future<void> startVideo() async {
     final res = await http.get(Uri.parse("http://$backendIP/start_video"));
     print(res.body);
@@ -27,6 +30,7 @@ class _CameraHomeState extends State<CameraHome> {
     });
   }
 
+  // --- Video Durdurma ---
   Future<void> stopVideo() async {
     final res = await http.get(Uri.parse("http://$backendIP/stop_video"));
     print(res.body);
@@ -35,24 +39,26 @@ class _CameraHomeState extends State<CameraHome> {
     });
   }
 
-  Future<void> getVideos() async {
-    final res = await http.get(Uri.parse("http://$backendIP/get_videos"));
+  // --- Medya Dosyalarını Çekme ---
+  Future<void> getMedia() async {
+    final res = await http.get(Uri.parse("http://$backendIP/get_media"));
+    final data = json.decode(res.body);
     setState(() {
-      videos = List<String>.from(json.decode(res.body));
+      videos = List<String>.from(data["videos"]);
+      photos = List<String>.from(data["photos"]);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Raspberry Pi / IP Kamera Test")),
+      appBar: AppBar(title: Text("Raspberry Pi Kamera Test")),
       body: Column(
         children: [
-          // Canlı görüntü
+          // Canlı Görüntü (Raspberry Pi stream)
           Expanded(
             child: MjpegView(
-              uri: ipCameraURL, // 1.0.1 sürümünde 'uri' kullanılıyor
-              
+              uri: "http://$backendIP/stream", // Artık backend stream endpoint
             ),
           ),
           Row(
@@ -62,18 +68,18 @@ class _CameraHomeState extends State<CameraHome> {
               ElevatedButton(
                   onPressed: recording ? stopVideo : startVideo,
                   child: Text(recording ? "Durdur" : "Video")),
-              ElevatedButton(
-                  onPressed: getVideos, child: Text("Videoları Listele")),
+              ElevatedButton(onPressed: getMedia, child: Text("Medya Listele")),
             ],
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: videos.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(videos[index]),
-                );
-              },
+            child: ListView(
+              children: [
+                Text("📹 Videolar:", style: TextStyle(fontWeight: FontWeight.bold)),
+                ...videos.map((v) => ListTile(title: Text(v))),
+                Divider(),
+                Text("📷 Fotoğraflar:", style: TextStyle(fontWeight: FontWeight.bold)),
+                ...photos.map((p) => ListTile(title: Text(p))),
+              ],
             ),
           )
         ],
