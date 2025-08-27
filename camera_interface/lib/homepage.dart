@@ -10,7 +10,7 @@ class CameraHome extends StatefulWidget {
 
 class _CameraHomeState extends State<CameraHome> {
   // Raspberry Pi'nin IP adresini hostname -I çıktısından alıp buraya yaz
-  String backendIP = "192.168.43.37:5000"; // Örnek, seninkini yaz
+  String backendIP = "172.20.10.4:5000"; // Örnek, seninkini yaz
   bool recording = false;
   List<String> videos = [];
   List<String> photos = [];
@@ -52,7 +52,10 @@ class _CameraHomeState extends State<CameraHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Raspberry Pi Kamera Test")),
+      backgroundColor: Colors.cyan,
+      appBar: AppBar(title: Container(child: Image.asset("images/"),),
+      
+      ),
       body: Column(
         children: [
           // Canlı Görüntü (Raspberry Pi stream)
@@ -64,11 +67,37 @@ class _CameraHomeState extends State<CameraHome> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(onPressed: capturePhoto, child: Text("Fotoğraf")),
+              ElevatedButton(onPressed: capturePhoto, child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(Icons.camera_alt_outlined,color: Colors.black,),
+                  SizedBox(width: 10,),
+                  Text("Fotoğraf",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+                ],
+              ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green
+                ),
+              ),
               ElevatedButton(
                   onPressed: recording ? stopVideo : startVideo,
-                  child: Text(recording ? "Durdur" : "Video")),
-              ElevatedButton(onPressed: getMedia, child: Text("Medya Listele")),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.videocam_outlined,size: 20, color: recording ? Colors.green : Colors.red),
+                      SizedBox(width: 10,),
+                      Text(recording ? "Durdur" : "Video",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: recording ? Colors.red : Colors.green),
+                  ),
+              ElevatedButton(onPressed: getMedia, child: Text("Medya Listele :",style: TextStyle(color: Colors.grey),
+              
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black
+              ),
+              ),
             ],
           ),
           Expanded(
