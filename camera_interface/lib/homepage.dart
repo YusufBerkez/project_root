@@ -53,8 +53,11 @@ class _CameraHomeState extends State<CameraHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.cyan,
-      appBar: AppBar(title: Container(child: Image.asset("images/"),),
-      
+      appBar: AppBar(title: Container(
+        height: 200,
+        alignment: Alignment.center,
+        child: Image.asset("images/ilab.png",fit: BoxFit.contain,),),
+        backgroundColor: Colors.cyan.shade200,
       ),
       body: Column(
         children: [
