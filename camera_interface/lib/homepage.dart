@@ -10,7 +10,8 @@ class CameraHome extends StatefulWidget {
 
 class _CameraHomeState extends State<CameraHome> {
   // Raspberry Pi'nin IP adresini hostname -I çıktısından alıp buraya yaz
-  String backendIP = "172.20.10.4:5000"; // Örnek, seninkini yaz
+   String backendIP = "172.30.0.93:5000"; // Örnek, seninkini yaz
+  //String backendIP = "192.168.1.36:8080"; // Örnek, seninkini yaz
   bool recording = false;
   List<String> videos = [];
   List<String> photos = [];
@@ -65,6 +66,7 @@ class _CameraHomeState extends State<CameraHome> {
           Expanded(
             child: MjpegView(
               uri: "http://$backendIP/stream", // Artık backend stream endpoint
+              //uri: "http://$backendIP/video", // Artık backend stream endpoint
             ),
           ),
           Row(
