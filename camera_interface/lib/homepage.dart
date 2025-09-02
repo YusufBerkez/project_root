@@ -1,3 +1,4 @@
+import 'package:camera_interface/videoscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:mjpeg_view/mjpeg_view.dart';
 import 'package:http/http.dart' as http;
@@ -72,36 +73,33 @@ class _CameraHomeState extends State<CameraHome> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(onPressed: capturePhoto, child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(Icons.camera_alt_outlined,color: Colors.black,),
-                  SizedBox(width: 10,),
-                  Text("Fotoğraf",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
-                ],
-              ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green
+              Expanded(
+                child: ElevatedButton(onPressed: capturePhoto, child:   
+                    Text("Fotoğraf 📷",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),overflow: TextOverflow.ellipsis, maxLines: 1,),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green
+                  ),
                 ),
               ),
-              ElevatedButton(
-                  onPressed: recording ? stopVideo : startVideo,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.videocam_outlined,size: 20, color: recording ? Colors.green : Colors.red),
-                      SizedBox(width: 10,),
-                      Text(recording ? "Durdur" : "Video",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                    ],
-                  ),
-                  style: ElevatedButton.styleFrom(backgroundColor: recording ? Colors.red : Colors.green),
-                  ),
-              ElevatedButton(onPressed: getMedia, child: Text("Medya Listele :",style: TextStyle(color: Colors.grey),
-              
+              Expanded(
+                child: ElevatedButton(
+                    onPressed: recording ? stopVideo : startVideo,
+                    child:   
+                        Text(recording ? "Durdur" : "Video 📹",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis, maxLines: 1,),                    
+                    style: ElevatedButton.styleFrom(backgroundColor: recording ? Colors.red : Colors.green),
+                    ),
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black
+              Expanded(
+                child: ElevatedButton(onPressed: getMedia, child: Text("Medya Listele :",style: TextStyle(color: Colors.grey),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black
+                ),
+                ),
               ),
+              Expanded(
+                child: ElevatedButton(onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>VideoPlayerScreen()));
+                }, child: Text("Video Oynatıcıya Git",overflow: TextOverflow.ellipsis, maxLines: 2,),style: ElevatedButton.styleFrom(backgroundColor: Colors.red,foregroundColor: Colors.white),),
               ),
             ],
           ),
