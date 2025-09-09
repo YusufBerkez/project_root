@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:camera_interface/bottomnavbar.dart';
 import 'package:camera_interface/homepage.dart';
+import 'package:camera_interface/camera%20ui/mainpage.dart';
 import 'package:flutter/material.dart';
 
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -12,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CameraHome(),
+      home: Bottomnavbar(),
     );
   }
 }

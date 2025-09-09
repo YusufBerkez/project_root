@@ -5,17 +5,23 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class CameraHome extends StatefulWidget {
+  
   @override
   _CameraHomeState createState() => _CameraHomeState();
+
+  
+  
 }
 
 class _CameraHomeState extends State<CameraHome> {
+  TextEditingController _ipcontroller=TextEditingController();
   // Raspberry Pi'nin IP adresini hostname -I çıktısından alıp buraya yaz
    String backendIP = "172.30.0.93:5000"; // Örnek, seninkini yaz
   //String backendIP = "192.168.1.36:8080"; // Örnek, seninkini yaz
   bool recording = false;
   List<String> videos = [];
   List<String> photos = [];
+  
 
   // --- Fotoğraf Çekme ---
   Future<void> capturePhoto() async {
@@ -50,9 +56,11 @@ class _CameraHomeState extends State<CameraHome> {
       photos = List<String>.from(data["photos"]);
     });
   }
-
+  
+  
   @override
   Widget build(BuildContext context) {
+    print("Ip: $backendIP");
     return Scaffold(
       backgroundColor: Colors.cyan,
       appBar: AppBar(title: Container(
@@ -60,6 +68,12 @@ class _CameraHomeState extends State<CameraHome> {
         alignment: Alignment.center,
         child: Image.asset("images/ilab.png",fit: BoxFit.contain,),),
         backgroundColor: Colors.cyan.shade200,
+        actions: [
+          IconButton(onPressed: (){
+            _showIpDialog(context);
+ 
+          }, icon: Icon(Icons.add)),
+        ],
       ),
       body: Column(
         children: [
@@ -73,6 +87,7 @@ class _CameraHomeState extends State<CameraHome> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              SizedBox(width: 5,),
               Expanded(
                 child: ElevatedButton(onPressed: capturePhoto, child:   
                     Text("Fotoğraf 📷",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),overflow: TextOverflow.ellipsis, maxLines: 1,),
@@ -81,6 +96,7 @@ class _CameraHomeState extends State<CameraHome> {
                   ),
                 ),
               ),
+              SizedBox(width: 5,),
               Expanded(
                 child: ElevatedButton(
                     onPressed: recording ? stopVideo : startVideo,
@@ -89,18 +105,21 @@ class _CameraHomeState extends State<CameraHome> {
                     style: ElevatedButton.styleFrom(backgroundColor: recording ? Colors.red : Colors.green),
                     ),
               ),
+              SizedBox(width: 5,),
               Expanded(
-                child: ElevatedButton(onPressed: getMedia, child: Text("Medya Listele :",style: TextStyle(color: Colors.grey),overflow: TextOverflow.ellipsis, maxLines: 2,),
+                child: ElevatedButton(onPressed: getMedia, child: Text("Medya Listele :",style: TextStyle(color: Colors.grey),overflow: TextOverflow.ellipsis, maxLines: 1,),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black
+                  backgroundColor: Colors.black,
+                  
                 ),
                 ),
               ),
-              Expanded(
-                child: ElevatedButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>VideoPlayerScreen()));
-                }, child: Text("Video Oynatıcıya Git",overflow: TextOverflow.ellipsis, maxLines: 2,),style: ElevatedButton.styleFrom(backgroundColor: Colors.red,foregroundColor: Colors.white),),
-              ),
+              // Expanded(
+              //   child: ElevatedButton(onPressed: (){
+              //     Navigator.push(context, MaterialPageRoute(builder: (context)=>VideoPlayerScreen()));
+              //   }, child: Text("Video Oynatıcıya Git",overflow: TextOverflow.ellipsis, maxLines: 2,),style: ElevatedButton.styleFrom(backgroundColor: Colors.red,foregroundColor: Colors.white),),
+              // ),
+              SizedBox(width: 5,),
             ],
           ),
           Expanded(
@@ -118,4 +137,52 @@ class _CameraHomeState extends State<CameraHome> {
       ),
     );
   }
+
+  // Bir butona basıldığında bu fonksiyonu çağırın
+void _showIpDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // AlertDialog'un kendisi burada
+      return AlertDialog(
+        title: const Text('IP Adresini Değiştir'),
+        content: Column(
+          // İçeriğin boyutunu küçük tutmak için
+          mainAxisSize: MainAxisSize.min, 
+          children: <Widget>[
+            const Text('Yeni IP adresini giriniz:'),
+            // Metin girişi için bir TextField
+             TextField(
+              controller: _ipcontroller,
+              decoration: InputDecoration(
+                hintText: 'örn. 192.168.1.1',
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          // İptal butonu
+          TextButton(
+            child: const Text('İptal'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Dialogu kapatır
+            },
+          ),
+          // Değiştir butonu
+          TextButton(
+            child: const Text('Değiştir'),
+            onPressed: () {
+              // Burada IP adresini kaydetme veya işleme alma kodunuzu yazın
+              // Ardından dialogu kapatın
+              setState(() {
+                backendIP=_ipcontroller.text;
+              });
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 }
